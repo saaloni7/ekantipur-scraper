@@ -1,0 +1,19 @@
+1. Entertainment (Top 5 Articles)
+Main Wrapper: div.category-wrapper
+
+Article Container: div.category (or article.teaser)
+
+Title: h2 a
+
+Article Link: h2 a (the href attribute)
+
+Image: div.image img (the src attribute)
+
+Author: div.author a
+
+Cartoon Section
+Cartoon Image Container: div.cartoon-image
+
+Link: div.cartoon-image a (the href attribute)
+
+Cartoon Image: div.cartoon-image img (the src attribute)

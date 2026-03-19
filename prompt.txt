@@ -1,0 +1,120 @@
+Prompt 1:Implement Full Scraper for Entertainment News + Cartoon
+
+Build a complete Playwright-based Python scraper in scraper.py to extract data from https://ekantipur.com.
+
+Requirements:
+- Use Playwright sync API (from playwright.sync_api import sync_playwright)
+- Do NOT create new files; modify scraper.py only
+- Implement a main() function and run everything from there
+
+Task 1: Entertainment News
+- Navigate to https://ekantipur.com/entertainment
+- Use the DOM structure:
+  - Main wrapper: div.category-wrapper
+  - Article container: div.category (or article.teaser)
+  - Title: h2 a (visible text)
+  - Image: div.image img (src or data-src if lazy-loaded)
+  - Author: div.author a (if missing, set null)
+- Extract top 5 articles
+- Each article must include:
+  - title (Nepali text exactly as displayed)
+  - image_url (full URL)
+  - category (e.g., "मनो रञ्जन")
+  - author (string or null)
+
+Task 2: Cartoon of the Day
+- Navigate to https://ekantipur.com/cartoon
+- Locate:
+  - Cartoon container: div.cartoon-image
+  - Image: div.cartoon-image img (src or data-src)
+  - Title: from img alt/title or nearby caption if available
+  - Author: cartoonist name if present (span/div class or caption)
+- If author is not found, set null
+
+Output Format:
+Save results as output.json in exactly this structure:
+
+{
+  "entertainment_news": [...],
+  "cartoon_of_the_day": {
+    "title": "...",
+    "image_url": "...",
+    "author": "..."
+  }
+}
+
+Important:
+- Ensure all text is UTF-8 (Nepali must remain in Nepali)
+- Use ensure_ascii=False when writing JSON
+- Handle missing elements safely using try/except or conditional checks
+- Use proper waits like page.wait_for_load_state("networkidle") and wait_for_selector
+- Use headless=False for debugging
+- Do not hardcode any data; everything must be scraped dynamically
+- Add clear comments explaining each step
+
+Prompt2:Fix Missing Image URL, Author, and Lazy Loading Issues
+
+Improve the scraper to correctly extract missing image URLs and author names from ekantipur.com.
+
+Current Issues:
+- image_url is sometimes null
+- author is missing even when visible
+
+Fix Requirements:
+- Handle lazy-loaded images:
+  - Prefer data-src, data-lazy-src, or similar attributes when src is empty
+  - Ensure images are fully loaded before extraction
+- Use scoped selectors inside each article card to avoid incorrect mapping
+- Avoid selecting unrelated images (logos, ads, icons)
+- Identify correct author selector inside each article (e.g., div.author a, span.author, etc.)
+- Implement fallback logic:
+  - Try multiple selectors if the primary one fails
+- Ensure each card extracts its own:
+  - title
+  - image
+  - author
+- Add debugging logs to confirm:
+  - number of cards found
+  - missing fields per card
+  - actual attributes being read
+
+Do not change output structure. Only improve extraction accuracy and reliability.
+
+Prompt 3: Enforce Output Structure + Data Validation
+
+Refactor the scraper to strictly match the required output.json structure and ensure data completeness.
+
+Output Format (must be exact):
+{
+  "entertainment_news": [
+    {
+      "title": "...",
+      "image_url": "...",
+      "category": "मनो रञ्जन",
+      "author": "..." or null
+    }
+  ],
+  "cartoon_of_the_day": {
+    "title": "...",
+    "image_url": "...",
+    "author": "..." or null
+  }
+}
+
+Requirements:
+- Ensure exactly 5 entertainment articles are extracted
+- Ensure cartoon_of_the_day is always present (or null if not found)
+- Validate extracted fields:
+  - title must not be empty
+  - image_url must be a valid string (not None if possible)
+  - author should be null if not found
+- Ensure Nepali text is preserved correctly (no encoding issues)
+- Use json.dump with ensure_ascii=False and indent=2
+- Ensure no extra keys or missing keys in final JSON
+- Maintain consistent structure even if some fields are missing
+- Add safeguards so partial failures do not break the entire output
+- Keep code clean, readable, and well-commented
+
+The final script must run successfully using:
+uv run python scraper.py
+and generate a valid output.json file.
