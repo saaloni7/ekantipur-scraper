@@ -677,6 +677,5 @@ def ensure_cartoon_shape(
     }
 
 
-if __name__ == "__main__":
-    main()
+
 
